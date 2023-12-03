@@ -125,7 +125,7 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require("nvim-tree").setup { view = { relativenumber = true } }
+      require("nvim-tree").setup { view = { relativenumber = true, side = 'right' } }
     end,
   },
 
@@ -162,6 +162,10 @@ require('lazy').setup({
     },
   },
 
+  -- for setting up copilot in neovim
+  {
+    'github/copilot.vim'
+  },
   {
     -- Dracula Theme
     'maxmx03/dracula.nvim',
@@ -223,6 +227,13 @@ require('lazy').setup({
       },
     },
   },
+  -- {
+  --   'ThePrimeagen/harpoon',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim'
+  --   },
+  --   opts = {}
+  -- },
 
   {
     -- Highlight, edit, and navigate code
@@ -237,7 +248,7 @@ require('lazy').setup({
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
   require 'kickstart.plugins.autoformat',
-  require 'kickstart.plugins.debug',
+  --  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -252,6 +263,13 @@ require('lazy').setup({
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+-- harpoon settings
+-- vim.cmd('highlight! HarpoonInactive guibg=NONE guifg=#63698c')
+-- vim.cmd('highlight! HarpoonActive guibg=NONE guifg=white')
+-- vim.cmd('highlight! HarpoonNumberActive guibg=NONE guifg=#7aa2f7')
+-- vim.cmd('highlight! HarpoonNumberInactive guibg=NONE guifg=#7aa2f7')
+-- vim.cmd('highlight! TabLineFill guibg=NONE guifg=white')
+
 -- Make all files folded by default
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
@@ -263,8 +281,16 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- Make line number relative
+vim.wo.relativenumber = true
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
+
+-- Copilot options
+vim.g.copilot_assume_mapped = true
+-- vim.g.copilot_no_tab_map = true
+-- vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -305,6 +331,10 @@ vim.o.termguicolors = true
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<Down>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<Up>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<Left>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<Right>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -334,10 +364,10 @@ require('telescope').setup {
   },
 }
 
-vim.keymap.set({ 'n', 'v', 'i' }, '<leader>tt', require('nvim-tree.api').tree.toggle,
+vim.keymap.set({ 'n', 'v' }, '<leader>t', require('nvim-tree.api').tree.toggle,
   { desc = '[T]oggle nvim [T]ree' })
-vim.keymap.set({ 'n', 'v', 'i' }, '<leader>tf', require('nvim-tree.api').tree.toggle,
-  { desc = '[F]ocus nvim [T]ree' })
+-- vim.keymap.set({ 'n', 'v' }, '<leader>tf', require('nvim-tree.api').tree.toggle,
+--   { desc = '[F]ocus nvim [T]ree' })
 
 
 -- Enable telescope fzf native, if installed
@@ -517,9 +547,10 @@ require('which-key').register({
 --  define the property 'filetypes' to the map in question.
 local servers = {
   clangd = {},
+  biome = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
